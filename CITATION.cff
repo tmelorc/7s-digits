@@ -1,0 +1,31 @@
+cff-version: 1.2.0 # Versão do padrão CFF
+message: "Se você usar este software, por favor, cite-o usando os metadados abaixo."
+type: software # Indica que o recurso é software
+
+title: "7s-digits"
+version: 3 # A versão específica que está sendo citada
+# doi: 10.5281/zenodo.1234567 # DOI, se o software foi arquivado no Zenodo (altamente recomendado!)
+date-released: 2025-12-09
+url: "https://github.com/tmelorc/7s-digits" # URL principal do repositório
+
+authors:
+  - family-names: "de Melo"
+    given-names: "Thiago"
+    email: "thiago.melo@unesp.br"
+    orcid: "https://orcid.org/0000-0002-4031-2805"
+    affiliation: "Universidade Estadual Paulista (UNESP)"
+
+  # - name: "Organização Tech" # Para representar um grupo ou equipe
+  #   website: "https://organizacaotech.com"
+
+preferred-citation: # Se houver um artigo científico associado
+  type: article
+  authors:
+    - family-names: "de Melo"
+      given-names: "Thiago"
+  title: "Aprendendo o Algorítimo da Divisão movimentando palitos"
+  # journal: "Revista Brasileira de Ciência"
+  # volume: 15
+  # issue: 3
+  year: 2025
+  # pages: "100-115"
