@@ -6,6 +6,18 @@ __pycache__/
 # C extensions
 *.so
 
+# Personal
+v1/
+PyQt/
+teste/
+doc/
+criar_pacote.sh
+Digits-v2-root
+*.zip
+palitosGUI-v2.py
+
+
+
 # Distribution / packaging
 .Python
 build/
