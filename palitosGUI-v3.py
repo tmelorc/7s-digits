@@ -1,9 +1,7 @@
-# zip -r palitos/palitos.zip palitos/palitosGUI-v3.py palitos/constantes.py palitos/functions.py palitos/display.py
-# pyinstaller --onefile --hidden-import='PIL._tkinter_finder' --windowed --name="Digits-v2" /home/thiago/Dropbox/programacao/python/palitos/palitosGUI-v2.py
 '''
-
 todo:
-    - implementar zero à esquerda
+    - implement leading zero option
+    - implement icon
 
 
 bug: no solve_II:
@@ -30,15 +28,11 @@ from translation import Translator
 class Application(ttk.Window):
     def __init__(self):
         super().__init__(resizable=(False, False))
-        # functions.setup(self)
 
         self.translator = Translator()
 
         self.title(APP_TITLE)
-        # self.geometry("500x500")
-        # self.minsize(900, 400)
-        # self.state('normal')
-        self.version = 3
+        self.version = APP_VERSION
 
         # Icon setup
         # icon_file = "doc/images/icon.png"
@@ -49,7 +43,8 @@ class Application(ttk.Window):
         # theme_names = style.theme_names()
         theme_names = ['cosmo', 'flatly', 'litera', 'minty', 'lumen', 'sandstone',
                        'yeti', 'pulse', 'united', 'morph', 'journal', 'simplex', 'cerculean']
-        # 'darkly', 'superhero', 'solar', 'cyborg', 'vapor',
+        # theme_names += ['darkly', 'superhero', 'solar', 'cyborg', 'vapor']
+
         self.background_color = style.colors.bg
         self.on_color = style.colors.primary
         self.off_color = style.colors.light
@@ -59,6 +54,7 @@ class Application(ttk.Window):
         header_frame = ttk.Frame(self, padding=(10, 10, 10, 0))
         header_frame.pack(fill=X, expand=NO)
 
+        # Title Label
         game_title = ttk.Label(
             master=header_frame,
             text=APP_TITLE,
@@ -66,6 +62,7 @@ class Application(ttk.Window):
         )
         game_title.pack(side=LEFT)
 
+        # Themes Combobox
         theme_cbo = ttk.Combobox(
             master=header_frame,
             text=style.theme.name,
@@ -73,6 +70,8 @@ class Application(ttk.Window):
         )
         theme_cbo.current(theme_names.index(style.theme.name))
         theme_cbo.pack(padx=5, side=RIGHT)
+
+        # Theme Label
         self.theme_label = ttk.Label(
             master=header_frame,
             text="Theme:",
@@ -81,6 +80,7 @@ class Application(ttk.Window):
         self.theme_label.pack(padx=5, side=RIGHT)
 
         def change_theme(e):
+            ''' Change the theme of the application '''
             t = theme_cbo.get()
             style.theme_use(t)
             theme_cbo.selection_clear()
@@ -91,7 +91,6 @@ class Application(ttk.Window):
             self.highlight_color = style.colors.warning
             self.background_color = style.colors.bg
 
-         # escolher as cores do tema para ficar bom no on/off
             for j, v in enumerate(self.display_instance.vectors):
                 for i, d in enumerate(v):
                     if d == 1:
@@ -110,28 +109,23 @@ class Application(ttk.Window):
         self.main_frame = ttk.Frame(self, padding=(10, 10, 10, 0))
         self.main_frame.pack(fill=BOTH, expand=YES)
 
-        # self.main_frame.columnconfigure(0, weight=0)
-        # self.main_frame.columnconfigure(1, weight=0)
-
-        # OPTIONS LABEL FRAME
+        # rframe: OPTIONS
         self.rframe = ttk.LabelFrame(
             self.main_frame, padding=(10, 10, 10, 10),  text='Options')
         self.rframe.pack(side=RIGHT, fill=BOTH, expand=YES, padx=5)
-        # self.rframe.grid(row=0, column=0, sticky="nsew", padx=5)
 
-        # GAME AREA LABEL FRAME
+        # lframe: BUTTONS AND INFO
         self.lframe = ttk.LabelFrame(
             self.main_frame, padding=(10, 10, 10, 10),  text='Game')
         self.lframe.pack(side=TOP, fill=BOTH, expand=YES, padx=5)
-        # self.lframe.grid(row=0, column=1, sticky="ns", padx=5)
 
+        # Implementing Options in rframe
         # Keep lenght setup
         self.keep_lenght = tk.BooleanVar(value=False)
         self.keep_lenght_checkbutton = ttk.Checkbutton(
             master=self.rframe,
             text="Keep the number of digits",
             variable=self.keep_lenght,
-            # command=keep_lenght_cb
         )
         self.keep_lenght_checkbutton.grid(
             row=0, column=1, pady=5, padx=10, sticky='w')
@@ -143,12 +137,11 @@ class Application(ttk.Window):
             text="Keep the number's parity",
             variable=self.keep_parity,
             state=NORMAL,
-            # command=keep_parity_cb
         )
         self.keep_parity_checkbutton.grid(
             row=1, column=1, pady=5, padx=10, sticky='w')
 
-        # Leading zero setup
+        # Leading zero setup (to be implemented)
         def leading_zero_cb():
             print(f'Leading zero: {self.leading_zero.get()}')
 
@@ -205,7 +198,7 @@ class Application(ttk.Window):
         self.fix_initial_number_input.bind(
             '<KP_Enter>', fix_initial_number_return)
 
-        # Max Num Moviments setup
+        # Maximal number of moviments setup
         self.max_num_moviments_label = ttk.Label(
             master=self.rframe,
             text=f"Maximum number of moves:\n(Game II)",
@@ -220,7 +213,6 @@ class Application(ttk.Window):
             from_=1,
             to=max_num_moviments,
             textvariable=self.max_num_moviments,
-            # command=max_num_moviments_cb,
             width=3,
             state=DISABLED
         )
@@ -228,7 +220,7 @@ class Application(ttk.Window):
             row=4, column=2, pady=5, padx=5, sticky='w'
         )
 
-        # Fix number of moviments setup
+        # Exact number of moviments setup
         self.exact_moviments_label = ttk.Label(
             master=self.rframe,
             text=f"Precise number of moves:\n(Game III)",
@@ -243,7 +235,6 @@ class Application(ttk.Window):
             from_=1,
             to=max_num_moviments,
             textvariable=self.exact_moviments,
-            # command=exact_moviments_cb,
             width=3,
             state=DISABLED
         )
@@ -259,13 +250,13 @@ class Application(ttk.Window):
         )
         self.solver_group.grid(row=0, column=0, rowspan=6, sticky="ns")
 
-        self.solver_list = list(solvers.keys())
+        self.solvers_list = list(solvers.keys())
         self.solver_choice = tk.StringVar()
-        self.solver_choice.set(self.solver_list[0])
+        self.solver_choice.set(self.solvers_list[0])
         self.solver = solvers[self.solver_choice.get()]
 
         self.menu_solvers = ttk.Menu(self.solver_group, tearoff=0)
-        for t in self.solver_list:
+        for t in self.solvers_list:
             translated = self.translator.translate(t)
             self.menu_solvers.add_radiobutton(
                 label=translated,
@@ -290,10 +281,6 @@ class Application(ttk.Window):
             wrap='word',
         )
 
-        # num = self.initial_number.get()
-        # translated = self.translator.translate('info_label', num=num)
-        # self.label_initial_number.config(text=translated)
-
         self.txt.insert(
             END, solvers_help[self.translator.current_language][self.solver_choice.get()])
         self.txt.pack(
@@ -314,22 +301,14 @@ class Application(ttk.Window):
             self.game_buttons_frame,
             text="New Game",
             command=self.new_game,
-            # font='bold',
-            # bg='#666666', fg='white',
-            # activebackground=ON_COLOR,
-            # activeforeground='black'
         )
         self.button_new_game.pack(padx=5, pady=5, side="left")
 
-        # Button to repeat the game
+        # Button to reset the game
         self.button_repeat_game = ttk.Button(
             self.game_buttons_frame,
             text="Reset Game",
             command=lambda: self.new_game(repeat=True),
-            # font='bold',
-            # bg='#666666', fg='white',
-            # activebackground=ON_COLOR,
-            # activeforeground='black'
         )
         self.button_repeat_game.pack(padx=5, pady=5, side="left")
 
@@ -338,21 +317,12 @@ class Application(ttk.Window):
             self.game_buttons_frame,
             text="Check Solution",
             command=self.check_solution,
-            # font='bold',
-            # bg='#666666', fg='white',
-            # activebackground=ON_COLOR,
-            # activeforeground='black'
         )
         self.button_check_solution.pack(padx=5, pady=5, side="left")
 
         ttk.Separator(self.lframe).pack(fill=X, pady=10, padx=5)
 
-        # GAME INFO LABEL FRAME
-        # self.game_info_frame = ttk.LabelFrame(self.lframe, text='Info', padding=(
-        #     10, 10, 10, 10))
-        # self.game_info_frame.pack(side=BOTTOM, fill=tk.X, expand=False, pady=5)
-
-        # Time info
+        # Timer info
         self.clock_on = False
         self.time = tk.IntVar(value=0)
         self.formatted_time = tk.StringVar()
@@ -386,8 +356,7 @@ class Application(ttk.Window):
             font='-size 14 -weight bold'
         )
 
-        # Create a label with hidden text
-        # self.hidden_text = "This is the hidden text!"
+        # Create a label with hidden text to be used as a tooltip
         self.hide_solution_label = ttk.Label(
             self.lframe,
             text="",
@@ -432,10 +401,7 @@ class Application(ttk.Window):
         # Author label
         self.author_label = ttk.Label(
             self.bottom_frame,
-            text=f"{self.translator.translate('author_label')}: " + AUTHOR,
-            # font='-size 12 -weight normal',
-            # font=('Helvetica', 12),
-            # fg='white', bg='#666666'
+            text=f"{self.translator.translate('author_label')}: " + APP_AUTHOR,
         )
         self.author_label.pack(side='left', pady=5, padx=5)
 
@@ -444,9 +410,6 @@ class Application(ttk.Window):
             self.bottom_frame,
             text=f"{self.translator.translate('Version')}: " +
             str(self.version),
-            # font='-size 12 -weight normal',
-            # font=('Helvetica', 12),
-            # fg='white', bg='#666666'
         )
         self.version_label.pack(side='right', pady=5, padx=5)
 
@@ -465,7 +428,6 @@ class Application(ttk.Window):
         self.new_game()
 
     def show_text(self, event):
-        # self.solution só existe depois que clicar no botão check solution
         self.hide_solution_label.config(text="fooo")
 
     def hide_text(self, event):
@@ -477,9 +439,11 @@ class Application(ttk.Window):
     def update_solver(self, new_solver):
         self.solver = solvers[new_solver]
         self.solver_choice.set(new_solver)
+        self.txt.config(state="normal")
         self.txt.delete("1.0", tk.END)
         self.txt.insert(
             "1.0", solvers_help[self.translator.current_language][self.solver_choice.get()])
+        self.txt.config(state="disabled")
         if new_solver == 'Game I':
             self.max_num_moviments_spinbox.config(state=DISABLED)
             self.exact_moviments_spinbox.config(state=DISABLED)
@@ -493,7 +457,6 @@ class Application(ttk.Window):
             self.exact_moviments_spinbox.focus_set()
 
     def new_game(self, repeat=False):
-
         if self.display_instance:
             self.display_instance.destroy()
 
@@ -511,9 +474,8 @@ class Application(ttk.Window):
                     int(self.fix_initial_number_input.get()))
             else:
                 self.initial_number.set(random_number())
-                # self.initial_number.set(123)
 
-        # Cria uma nova instância de Display
+        # Display instance
         self.display_instance = Display(
             master=self.display_frame, root=self,  number=self.initial_number.get())
         self.display_instance.pack(side=BOTTOM)
@@ -525,7 +487,6 @@ class Application(ttk.Window):
         self.time.set(0)
         self.clock_on = True
 
-        # Cria uma nova instância de label_ans para exibir a resposta
         self.label_ans = ttk.Label(
             self, text='', font='-size 14 -weight bold')
         self.label_ans.pack(pady=0)
@@ -650,11 +611,11 @@ class Application(ttk.Window):
             label=self.translator.translate('exit'), command=self.quit)
         menubar.add_cascade(label='Menu', menu=file_menu)
 
-        # Menu Idiomas
+        # Language Menu
         language_menu = ttk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label=self.translator.translate(
             'language'), menu=language_menu)
-        # SubMenu Idiomas
+        # SubMenu
         language_menu.add_command(label=self.translator.translate(
             'english'), command=lambda: self.change_language('en'))
         language_menu.add_command(label=self.translator.translate(
@@ -697,7 +658,7 @@ class Application(ttk.Window):
         self.display_frame.config(
             text=self.translator.translate('display_frame'))
         self.author_label.config(
-            text=f"{self.translator.translate('author_label')}: " + AUTHOR)
+            text=f"{self.translator.translate('author_label')}: " + APP_AUTHOR)
         self.version_label.config(
             text=f"{self.translator.translate('Version')}: " + str(self.version))
 
@@ -709,13 +670,13 @@ class Application(ttk.Window):
         )
         self.txt.config(state="disabled")
 
-        # Atualiza menubutton
+        # Update menubutton
         self.menubutton.config(
             text=self.translator.translate(self.solver_choice.get()))
 
-        # Reconstrói menu traduzido
+        # Update translated menu items
         self.menu_solvers.delete(0, "end")
-        for t in self.solver_list:
+        for t in self.solvers_list:
             self.menu_solvers.add_radiobutton(
                 label=self.translator.translate(t),
                 value=t,
@@ -729,7 +690,6 @@ class Application(ttk.Window):
         self.update_ui()
 
 
-# Execução
 if __name__ == "__main__":
     app = Application()
     app.mainloop()

@@ -1,5 +1,3 @@
-import tkinter as tk
-# from tkinter import Menu
 import json
 import os
 

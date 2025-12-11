@@ -104,7 +104,6 @@ class Digit:
             current_segment = self.segments[(
                 segment_animation_order[idx % 7] - 1) % 7]
             self.canvas.itemconfig(current_segment, fill=self.on_color)
-            # print(current_segment)
 
             self.master.after(segment_animation_speed,
                               self.animate_segment, idx + 1)
@@ -112,11 +111,9 @@ class Digit:
             current_segment = self.segments[(
                 segment_animation_order[idx % 7]-1) % 7]
             self.canvas.itemconfig(current_segment, fill=self.off_color)
-            # print(current_segment)
 
             self.master.after(segment_animation_speed,
                               self.animate_segment, idx + 1)
-        # Paint number digit segments
         if idx == 13:
             for i, d in enumerate(self.vector):
                 if d == 1:

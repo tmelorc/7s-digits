@@ -3,14 +3,6 @@ from typing import Tuple
 from constantes import *
 
 
-# app_instance = None
-# def setup(app):
-#     global app_instance
-#     app_instance = app
-# def get_value():
-#     return app_instance.value
-
-
 def euclid(n, k=7):
     return (n // k, n % k)
 
@@ -25,6 +17,7 @@ def update_vector(vector, idx):
 
 
 def vec_to_digit(vector):
+    ''' Returns the digit value represented by the vector. '''
     for digit, vec in vectors.items():
         if vec == vector:
             return digit
@@ -32,6 +25,7 @@ def vec_to_digit(vector):
 
 
 def digit_to_vec(value: int):
+    ''' Returns the vector representation of the digit value. '''
     if value not in range(10):
         print(f'** Invalid value: {value}. Should be single digit.')
         return None
@@ -39,7 +33,7 @@ def digit_to_vec(value: int):
 
 
 def num_to_vec(N):
-    ''' retorna o vetor característico de N '''
+    ''' Returns the vector representation of the number N. '''
     v = []
     for digit in str(N):
         v += digit_to_vec(int(digit))
@@ -54,6 +48,7 @@ def norm(N: int):
 
 
 def expand_vec(vector, delta=0):
+    ''' Add leading zeros to the vector representation of a number. '''
     return 7 * delta * [0] + vector
 
 
@@ -63,15 +58,10 @@ def seconds_to_time(seconds):
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
-def solve_I(N: int, *args, **kwargs) -> Tuple[int, int]:
-    ''' Minimizar o número inicial apenas movendo segmentos. '''
-
-    # exact_moviments = kwargs.get('exact_moviments', 5)
+def solver_I(N: int, *args, **kwargs) -> Tuple[int, int]:
+    ''' Minimize the initial number only by moving segments, i.e., keeping the same number of segments. '''
     keep_lenght = kwargs.get('keep_lenght', False)
     keep_parity = kwargs.get('keep_parity', False)
-    leading_zero = kwargs.get('leading_zero', False)
-    # max_num_moviments = kwargs.get('max_num_moviments', 5)
-    # num_moviments = kwargs.get('num_moviments', 3)
     segments = norm(N)
 
     if keep_lenght:
@@ -93,15 +83,11 @@ def solve_I(N: int, *args, **kwargs) -> Tuple[int, int]:
     return Nmin, min_moviments
 
 
-def solve_II(N: int, *args, **kwargs) -> Tuple[int, int]:
-    ''' Minimizar o número inicial movendo no máximo 'Maximal number of moviments' segmentos. '''
-
-    # exact_moviments = kwargs.get('exact_moviments', 5)
+def solver_II(N: int, *args, **kwargs) -> Tuple[int, int]:
+    ''' Minimize the initial number by moving at most 'Maximal number of moviments' segments. '''
     keep_lenght = kwargs.get('keep_lenght', False)
     keep_parity = kwargs.get('keep_parity', False)
-    leading_zero = kwargs.get('leading_zero', False)
     max_num_moviments = kwargs.get('max_num_moviments', 5)
-    # num_moviments = kwargs.get('num_moviments', 3)
 
     if keep_lenght:
         Nmin = 10**(len(str(N))-1)
@@ -131,15 +117,11 @@ def solve_II(N: int, *args, **kwargs) -> Tuple[int, int]:
                 return k, min_moviments
 
 
-def solve_III(N: int, *args, **kwargs) -> int:
-    ''' Minimizar o número inicial movendo exatamente 'Maximal number of moviments' segmentos. '''
-
+def solver_III(N: int, *args, **kwargs) -> int:
+    ''' Minimize the initial number by moving exactly 'Precise number of moviments' segments. '''
     exact_moviments = kwargs.get('exact_moviments', 5)
     keep_lenght = kwargs.get('keep_lenght', False)
     keep_parity = kwargs.get('keep_parity', False)
-    leading_zero = kwargs.get('leading_zero', False)
-    # max_num_moviments = kwargs.get('max_num_moviments', 5)
-    # num_moviments = kwargs.get('num_moviments', 3)
 
     if keep_lenght:
         Nmin = 10**(len(str(N))-1)
@@ -170,21 +152,33 @@ def solve_III(N: int, *args, **kwargs) -> int:
 
 
 solvers = {
-    "Game I": solve_I,
-    "Game II": solve_II,
-    "Game III": solve_III,
+    "Game I": solver_I,
+    "Game II": solver_II,
+    "Game III": solver_III,
 }
 
 solvers_help = {
     "pt": {
         "Game I": (
             f"Minimizar o número inicial apenas movendo segmentos, ou seja, mantendo a quantidade de segmentos.\n"
-            f" - Utilize a opção 'Manter o número de dígitos' para manter a quantia de dígitos, ou seja, não será permitido apagar dígitos.\n - Utilize a opção 'Keep the number's parity' para que a solução tenha a mesma paridade que o número inicial.\n - Utilize a opção 'Allow leading zeros' para permitir zeros à esquerda."
+            f" - Utilize a opção 'Manter o número de dígitos' para manter a quantia de dígitos, ou seja, não será permitido apagar dígitos.\n"
+            f" - Utilize a opção 'Manter paridade do número' para que a solução tenha a mesma paridade que o número inicial.\n"
+            f" - Utilize a opção 'Permitir zeros à esquerda' para permitir zeros à esquerda."
         ),
-        #
-        "Game II": (f"Minimizar o número inicial movendo no máximo 'Maximum number of moves' segmentos.\n - Utilize a opção 'Keep the number of digits' para manter a quantia de dígitos, ou seja, não será permitido apagar dígitos.\n - Utilize a opção 'Keep the number's parity' para que a solução tenha a mesma paridade que o número inicial.\n - Utilize a opção 'Allow leading zeros' para permitir zeros à esquerda."),
-        #
-        "Game III": (f"Minimizar o número inicial movendo exatamente 'Precise number of moves' segmentos.\n - Utilize a opção 'Keep the number of digits' para manter a quantia de dígitos, ou seja, não será permitido apagar dígitos.\n - Utilize a opção 'Keep the number's parity' para que a solução tenha a mesma paridade que o número inicial.\n - Utilize a opção 'Allow leading zeros' para permitir zeros à esquerda.")
+
+        "Game II": (
+            f"Minimizar o número inicial movendo no máximo 'Número máximo de movimentos' (definido pelo jogador) segmentos.\n"
+            f" - Utilize a opção 'Manter o número de dígitos' para manter a quantia de dígitos, ou seja, não será permitido apagar dígitos.\n"
+            f" - Utilize a opção 'Manter paridade do número' para que a solução tenha a mesma paridade que o número inicial.\n"
+            f" - Utilize a opção 'Permitir zeros à esquerda' para permitir zeros à esquerda."
+        ),
+
+        "Game III": (
+            f"Minimizar o número inicial movendo exatamente 'Número exato de movimentos' (definido pelo jogador) segmentos.\n"
+            f" - Utilize a opção 'Manter o número de dígitos' para manter a quantia de dígitos, ou seja, não será permitido apagar dígitos.\n"
+            f" - Utilize a opção 'Manter paridade do número' para que a solução tenha a mesma paridade que o número inicial.\n"
+            f" - Utilize a opção 'Permitir zeros à esquerda' para permitir zeros à esquerda."
+        )
     },
     "en": {
         "Game I": (
@@ -230,5 +224,5 @@ solvers_help = {
 
 
 if __name__ == '__main__':
-    solve_III(123, exact_num_moviments=3)
+    solver_III(123, exact_num_moviments=3)
     None

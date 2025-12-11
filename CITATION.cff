@@ -1,5 +1,5 @@
 cff-version: 1.2.0 # Versão do padrão CFF
-message: "Se você usar este software, por favor, cite-o usando os metadados abaixo."
+message: "If you use this software, please cite it as below." # 
 type: software # Indica que o recurso é software
 
 title: "7s-digits"
